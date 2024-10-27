@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class Config {
 
-    public static final Config INSTANCE = new Config();
+    public static final Config instance = new Config();
 
     private Properties properties;
 

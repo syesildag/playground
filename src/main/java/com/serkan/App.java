@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.scan.StandardJarScanner;
 
 public class App {
 
@@ -13,10 +14,12 @@ public class App {
 
         Tomcat tomcat = new Tomcat();
         tomcat.setBaseDir(new File("/tmp/tomcat").getAbsolutePath());
-        tomcat.setHostname(Config.INSTANCE.getProperty("SERVER_HOSTNAME"));
-        tomcat.setPort(Config.INSTANCE.getProperty("SERVER_PORT", Integer.class));
+        tomcat.setHostname(Config.instance.getProperty("SERVER_HOSTNAME"));
+        tomcat.setPort(Config.instance.getProperty("SERVER_PORT", Integer.class));
         tomcat.getConnector();
-        tomcat.addWebapp(Config.INSTANCE.getProperty("CONTEXT_PATH"), new File("deploy").getAbsolutePath());
+
+        var context = tomcat.addWebapp(Config.instance.getProperty("CONTEXT_PATH"), new File("deploy").getAbsolutePath());
+        ((StandardJarScanner) context.getJarScanner()).setScanManifest(false);
 
         tomcat.start();
         tomcat.getServer().await();
